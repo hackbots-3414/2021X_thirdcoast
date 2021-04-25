@@ -33,5 +33,5 @@ Many thanks to 2767 Strykeforce.
 4. Run `gradlew publishToMavenLocal`
 5. Run `ls -l ~/.m2/repository/org/strykeforce/2021X_thirdcoast/21.0.0/` to confirm all of the .jar, .module and .pom files published with the correct timestamp.  You will need to do this any time you need to fix a bug in this library for the 2021X_Thrifty_Server_Java project to "see" the fix.
 
-
+***BE VERY CAREFUL TO SELECT THE CORRECT master BRANCH when opening your pull request.  Strykeforce's master may be first in the list.***
 
