@@ -34,7 +34,7 @@ public class Wheel {
   private static final Logger logger = LoggerFactory.getLogger(Wheel.class);
   private final double driveSetpointMax;
   private final BaseTalon driveTalon;
-  private final TalonSRX azimuthTalon;
+  private final AzimuthMotor azimuthTalon;
   protected DoubleConsumer driver;
   private boolean isInverted = false;
 
@@ -50,7 +50,7 @@ public class Wheel {
    * @param drive the configured drive TalonSRX
    * @param driveSetpointMax scales closed-loop drive output to this value when drive setpoint = 1.0
    */
-  public Wheel(TalonSRX azimuth, BaseTalon drive, double driveSetpointMax) {
+  public Wheel(AzimuthMotor azimuth, BaseTalon drive, double driveSetpointMax) {
     this.driveSetpointMax = driveSetpointMax;
     azimuthTalon = Objects.requireNonNull(azimuth);
     driveTalon = Objects.requireNonNull(drive);
@@ -78,7 +78,7 @@ public class Wheel {
 
     azimuth *= -TICKS; // flip azimuth, hardware configuration dependent
 
-    double azimuthPosition = azimuthTalon.getSelectedSensorPosition(0);
+    double azimuthPosition = azimuthTalon.getAzimuthPosition();
     double azimuthError = Math.IEEEremainder(azimuth - azimuthPosition, TICKS);
 
     // minimize azimuth rotation, reversing drive if necessary
@@ -88,7 +88,7 @@ public class Wheel {
       drive = -drive;
     }
 
-    azimuthTalon.set(MotionMagic, azimuthPosition + azimuthError);
+    azimuthTalon.set(azimuthPosition + azimuthError);
     driver.accept(drive);
   }
 
@@ -98,11 +98,11 @@ public class Wheel {
    * @param position position in encoder ticks.
    */
   public void setAzimuthPosition(int position) {
-    azimuthTalon.set(MotionMagic, position);
+    azimuthTalon.set(position);
   }
 
   public void disableAzimuth() {
-    azimuthTalon.neutralOutput();
+    azimuthTalon.stop();
   }
 
   /**
@@ -137,7 +137,7 @@ public class Wheel {
    * current position in case the wheel has been manually rotated away from its previous setpoint.
    */
   public void stop() {
-    azimuthTalon.set(MotionMagic, azimuthTalon.getSelectedSensorPosition(0));
+    azimuthTalon.set(azimuthTalon.getAzimuthPosition());
     driver.accept(0d);
   }
 
@@ -157,9 +157,9 @@ public class Wheel {
    */
   public void setAzimuthZero(int zero) {
     int azimuthSetpoint = getAzimuthAbsolutePosition() - zero;
-    ErrorCode err = azimuthTalon.setSelectedSensorPosition(azimuthSetpoint, 0, 10);
-    Errors.check(err, logger);
-    azimuthTalon.set(MotionMagic, azimuthSetpoint);
+    azimuthTalon.setAzimuthPosition(azimuthSetpoint);
+   
+    azimuthTalon.set(azimuthSetpoint);
   }
 
   /**
@@ -168,7 +168,7 @@ public class Wheel {
    * @return 0 - 4095, corresponding to one full revolution.
    */
   public int getAzimuthAbsolutePosition() {
-    return azimuthTalon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+    return azimuthTalon.getAzimuthAbsolutePosition();
   }
 
   /**
@@ -176,7 +176,7 @@ public class Wheel {
    *
    * @return azimuth Talon instance used by wheel
    */
-  public TalonSRX getAzimuthTalon() {
+  public AzimuthMotor getAzimuthTalon() {
     return azimuthTalon;
   }
 
@@ -208,4 +208,6 @@ public class Wheel {
         + driveSetpointMax
         + '}';
   }
+
+
 }

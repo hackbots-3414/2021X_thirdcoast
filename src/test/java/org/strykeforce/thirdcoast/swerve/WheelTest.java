@@ -29,7 +29,7 @@ import static org.strykeforce.thirdcoast.swerve.SwerveDrive.DriveMode.*;
 class WheelTest {
 
   @Mock private BaseTalon driveTalon;
-  @Mock private TalonSRX azimuthTalon;
+  @Mock private TalonAzimuthImpl azimuthTalon;
 
   static Stream<Arguments> setDriveModeTestProvider() {
     return Stream.of(

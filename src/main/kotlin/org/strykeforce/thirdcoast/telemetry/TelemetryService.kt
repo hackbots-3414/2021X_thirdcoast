@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import mu.KotlinLogging
 import org.strykeforce.thirdcoast.swerve.SwerveDrive
+import org.strykeforce.thirdcoast.swerve.AzimuthMotor
+import org.strykeforce.thirdcoast.swerve.TalonAzimuthImpl
 import org.strykeforce.thirdcoast.talon.TalonFXItem
 import org.strykeforce.thirdcoast.telemetry.item.Measurable
 import org.strykeforce.thirdcoast.telemetry.item.TalonSRXItem
@@ -119,7 +121,7 @@ class TelemetryService(private val telemetryControllerFactory: Function<Inventor
    */
   fun register(swerveDrive: SwerveDrive) = swerveDrive.wheels.forEach {
     register(TalonSRXItem(it.azimuthTalon))
-    if(it.driveTalon is TalonSRX) register(TalonSRXItem(it.driveTalon as TalonSRX))
+    if(it.driveTalon is TalonAzimuthImpl) register(TalonSRXItem(it.driveTalon as TalonAzimuthImpl))
     else if(it.driveTalon is TalonFX) register(TalonFXItem(it.driveTalon as TalonFX))
     else throw IllegalArgumentException()
   }
