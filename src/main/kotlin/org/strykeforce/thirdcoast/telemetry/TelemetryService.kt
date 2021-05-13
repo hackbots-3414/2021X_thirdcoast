@@ -120,7 +120,7 @@ class TelemetryService(private val telemetryControllerFactory: Function<Inventor
    * @throws IllegalStateException if TelemetryService is running.
    */
   fun register(swerveDrive: SwerveDrive) = swerveDrive.wheels.forEach {
-    register(TalonSRXItem(it.azimuthTalon))
+    //register(TalonSRXItem(it.azimuthTalon))
     if(it.driveTalon is TalonAzimuthImpl) register(TalonSRXItem(it.driveTalon as TalonAzimuthImpl))
     else if(it.driveTalon is TalonFX) register(TalonFXItem(it.driveTalon as TalonFX))
     else throw IllegalArgumentException()

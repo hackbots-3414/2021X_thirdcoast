@@ -88,7 +88,7 @@ public class Wheel {
       drive = -drive;
     }
 
-    azimuthTalon.set(azimuthPosition + azimuthError);
+    azimuthTalon.setNextPosition(azimuthPosition + azimuthError);
     driver.accept(drive);
   }
 
@@ -98,11 +98,11 @@ public class Wheel {
    * @param position position in encoder ticks.
    */
   public void setAzimuthPosition(int position) {
-    azimuthTalon.set(position);
+    azimuthTalon.setNextPosition(position);
   }
 
   public void disableAzimuth() {
-    azimuthTalon.stop();
+    azimuthTalon.disableAzimuthMotor();
   }
 
   /**
@@ -137,7 +137,7 @@ public class Wheel {
    * current position in case the wheel has been manually rotated away from its previous setpoint.
    */
   public void stop() {
-    azimuthTalon.set(azimuthTalon.getAzimuthPosition());
+    azimuthTalon.setNextPosition(azimuthTalon.getAzimuthPosition());
     driver.accept(0d);
   }
 
@@ -157,9 +157,9 @@ public class Wheel {
    */
   public void setAzimuthZero(int zero) {
     int azimuthSetpoint = getAzimuthAbsolutePosition() - zero;
-    azimuthTalon.setAzimuthPosition(azimuthSetpoint);
+    azimuthTalon.setAzimuthReferencePosition(azimuthSetpoint);
    
-    azimuthTalon.set(azimuthSetpoint);
+    azimuthTalon.setNextPosition(azimuthSetpoint);
   }
 
   /**

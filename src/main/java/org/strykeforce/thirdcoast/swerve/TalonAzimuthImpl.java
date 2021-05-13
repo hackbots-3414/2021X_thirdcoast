@@ -22,17 +22,17 @@ public class TalonAzimuthImpl extends TalonSRX implements AzimuthMotor {
         return getSelectedSensorPosition(0);
     }
 
-    public void set(double newPosition) {
+    public void setNextPosition(double newPosition) {
         set(MotionMagic, newPosition);
 
     }
 
-    public void stop() {
+    public void disableAzimuthMotor() {
         neutralOutput();
         
     }
 
-    public void setAzimuthPosition(int newAzimuthPosition){
+    public void setAzimuthReferencePosition(int newAzimuthPosition){
         ErrorCode err = setSelectedSensorPosition(newAzimuthPosition, 0, 10);
         Errors.check(err, logger);
     

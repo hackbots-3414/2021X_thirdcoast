@@ -4,10 +4,9 @@ package org.strykeforce.thirdcoast.swerve;
 public interface AzimuthMotor {
     int getDeviceID();
     double getAzimuthPosition();
-    void set(double newPosition);
-    //TODO consider new name for neutralOutput
-    void stop();
-    void setAzimuthPosition(int newAzimuthPosition);
+    void setNextPosition(double newPosition);
+    void disableAzimuthMotor();
+    void setAzimuthReferencePosition(int newAzimuthPosition);
     int getAzimuthAbsolutePosition();
 
 }
