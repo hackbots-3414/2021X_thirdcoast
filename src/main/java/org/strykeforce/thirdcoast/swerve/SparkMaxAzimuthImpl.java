@@ -1,16 +1,24 @@
 package org.strykeforce.thirdcoast.swerve;
 
+import com.ctre.phoenix.sensors.CANCoder;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+
+import edu.wpi.first.wpilibj.controller.PIDController;
 
 public class SparkMaxAzimuthImpl extends CANSparkMax implements AzimuthMotor {
 
     private static int TICKS_PER_REVOLUTION = 0;
         
-    
+    private CANCoder steeringEncoder;
 
-    public SparkMaxAzimuthImpl(int deviceID, MotorType type) {
+    private PIDController pidController;
+
+    public SparkMaxAzimuthImpl(int deviceID, MotorType type, int encoderCANId, double kP, double kI, double kD) {
         super(deviceID, type);
+        steeringEncoder = new CANCoder(encoderCANId);
+        pidController = new PIDController(kP, kI, kD);
     }
 
     /**
@@ -18,8 +26,8 @@ public class SparkMaxAzimuthImpl extends CANSparkMax implements AzimuthMotor {
      * 
      * @param deviceID
      */
-    public SparkMaxAzimuthImpl(int deviceID){
-        this(deviceID, MotorType.kBrushless);
+    public SparkMaxAzimuthImpl(int deviceID, int encoderCANId, double kP, double kI, double kD){
+        this(deviceID, MotorType.kBrushless, encoderCANId, kP, kI, kD);
     }
 
     @Override
@@ -38,8 +46,7 @@ public class SparkMaxAzimuthImpl extends CANSparkMax implements AzimuthMotor {
 
     @Override
     public double getAzimuthPosition() {
-         // TODO verify which encoder we are using 
-        return (int) getEncoder().getPosition();
+        return  steeringEncoder.getPosition();
     }
 
     @Override
@@ -49,12 +56,13 @@ public class SparkMaxAzimuthImpl extends CANSparkMax implements AzimuthMotor {
 
     @Override
     public void setAzimuthReferencePosition(int newAzimuthPosition) {
-        getEncoder().setPosition(newAzimuthPosition);
+        steeringEncoder.setPosition(newAzimuthPosition, 10);
     }
 
     @Override
     public void setNextPosition(double newPosition) {
-        getPIDController().setReference(newPosition, ControlType.kPosition);    
+        set(pidController.calculate(getAzimuthPosition(), newPosition));
+
     }
     
 }
