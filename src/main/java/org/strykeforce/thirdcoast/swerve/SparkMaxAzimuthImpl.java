@@ -41,7 +41,9 @@ public class SparkMaxAzimuthImpl extends CANSparkMax implements AzimuthMotor {
         // Our SparkMax full reverse input pulse = 1000 us
         // Neutral input pulse = 1500 us 
         // Full forward input pulse = 2000 us 
-       return (int) (((getAzimuthPosition() % TICKS_PER_REVOLUTION) * 1000) + 1000); 
+      // return (int) (((getAzimuthPosition() % TICKS_PER_REVOLUTION) * 1000) + 1000); 
+    
+      return (int) getAzimuthPosition();
     }
 
     @Override
