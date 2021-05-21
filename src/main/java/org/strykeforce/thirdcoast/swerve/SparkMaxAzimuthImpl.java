@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SparkMaxAzimuthImpl extends CANSparkMax implements AzimuthMotor {
 
@@ -19,6 +20,7 @@ public class SparkMaxAzimuthImpl extends CANSparkMax implements AzimuthMotor {
         super(deviceID, type);
         steeringEncoder = new CANCoder(encoderCANId);
         pidController = new PIDController(kP, kI, kD);
+        SmartDashboard.putData("azimuth-"+ deviceID, pidController);
     }
 
     /**
